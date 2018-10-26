@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+
+{% block container %}
+    <h1>Sensor Config</h1>
+    <div class="row">
+        <div class="col col-md-6">
+
+        </div>
+
+        <form class="col col-md-6"
+              action="{{ url_for('dashboard') }}"
+              method="POST">
+            {% if devices|length == 0 %}
+                <div class="alert alert-danger">
+                    <h3 class="alert-heading">No device found</h3>
+                    <p>It seems like there are no USB devices connected. Connect
+                        the
+                        device and refresh this page.
+                    </p>
+                </div>
+            {% else %}
+
+                <div class="input-group my-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">USB</span>
+                    </div>
+                    <select name="device" class="form-control">
+                        {% for dev in devices %}
+                            <option value="{{ dev }}">{{ dev }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group my-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Baudrate</span>
+                    </div>
+                    <input type="number" min="4800" step="100" value="9600"
+                           class="form-control" name="baud">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Go to Dashboard
+                </button>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

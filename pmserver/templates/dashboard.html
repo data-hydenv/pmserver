@@ -1,0 +1,163 @@
+{% extends 'index.html' %}
+
+{% block container %}
+    <div class="jumbotron">
+        <h1>Welcome to PM Server</h1>
+        <p>This is a dummy text provided by PM server</p>
+        <div class="badge badge-danger badge-lg my-4" id="statusBadge">
+            Status:&nbsp;
+            <div class="badge badge-light">
+                offline
+            </div>
+        </div>
+        <a class="btn btn-primary mx-3 btn-sm" href="{{ url_for('config') }}">
+            Configure
+        </a>
+
+    </div>
+
+    <div class="row">
+    <div class="col col-md-4">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">step</spanclass>
+            </div>
+            <input type="number" min="0" step="1" value="15" id="step">
+            <div class="input-group-append">
+                <span class="input-group-text">sec</span>
+            </div>
+        </div>
+    </div>
+    <div class="col col-md-4"></div>
+    <div class="col col-md-4"></div>
+    </div>
+
+    <div class="row">
+    <div class="col col-xs-12">
+        <h3>Plot</h3>
+        <div id="plot" style="height: 300px;"></div>
+    </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-xs-12">
+        <h3>Data</h3>
+
+        <pre class="card bg-light p-3" id="rawData">
+        </pre>
+    </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+    var host = 'http://localhost:5000';
+    var data = [];
+    var pm10 = [];
+    var pm25 = [];
+    var connected = false;
+    var dataFormat = 'json';
+
+    // status handler
+    statusHandler = function() {
+        pmStatus();
+        setTimeout(statusHandler, 2500);
+    };
+
+    measureHandler = function() {
+      pmMeasure();
+      setTimeout(measureHandler, Number($('#step').val()) * 1000);
+    };
+
+    // call the measure endpoint
+    pmMeasure = function() {
+        if (connected) {
+            $.get(host + '/measure', (response) =>{
+                data.push(response);
+
+                // update DOM
+                updateRaw();
+                updatePlot(response);
+            });
+        }
+    };
+
+    // call the measure endpoint
+    pmStatus = function() {
+        return $.get(host + '/status', (status) => {
+            // update status
+            connected = status.connected;
+            // update badge
+            updateStatus(connected);
+        });
+    };
+
+    // inject the status into DOM
+    updateStatus = function(isOnline) {
+        b = $('#statusBadge');
+        if (isOnline) {
+            // turn badge on
+            b.removeClass('badge-danger');
+            b.addClass('badge-success');
+            b.children().html('online');
+        } else {
+            // turn badge off
+            b.removeClass('badge-success');
+            b.addClass('badge-danger');
+            b.children().html('offline');
+        }
+    };
+
+    // update Raw data area
+    updateRaw = function() {
+        if (dataFormat==='json') {
+            $('#rawData').html(JSON.stringify(data, null, 4));
+        }
+        if (dataFormat==='csv') {
+            s = 'time,PM10,PM25\n';
+            data.forEach(el => {
+                s += el.time + ',' + el.PM10 + ',' + el.PM25 + '\n';
+            });
+            $('#rawData').html(s);
+        }
+
+    };
+
+    initPlot = function() {
+        // convert data
+        data.forEach(el => {
+            pm10.push({x: new Date(el.time), y: el.PM10});
+            pm25.push({x: new Date(el.time), y: el.PM25});
+        });
+
+        options = {
+            zoomEnabled: true,
+            animationEnabled: true,
+            axisY: {includeZero: false},
+            data: [
+                {type: 'line', dataPoints: pm10},
+                {type: 'line', dataPoints: pm25},
+            ]
+        };
+
+        $('#plot').CanvasJSChart(options);
+    };
+
+    updatePlot = function(element) {
+        // add new PM10 point
+        pm10.push({x: new Date(element.time), y: element.PM10});
+        pm25.push({x: new Date(element.time), y: element.PM25});
+
+        $('#plot').CanvasJSChart().render();
+    };
+
+    // start handler
+    statusHandler();
+    setTimeout(measureHandler, 200);
+    initPlot();
+
+
+    </script>
+{% endblock %}
