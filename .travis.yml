@@ -1,0 +1,18 @@
+language: python
+python: 3.6
+
+install:
+  - pip install -r requirements.txt
+  - pip install .
+  - pip install pyinstaller
+
+script:
+  - pyinstaller -F --add-data pmserver/templates:pmserver/tempates serv.py
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: $GITHUB_TOKEN
+  file: dist/serv
+  on:
+    tags: true
