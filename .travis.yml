@@ -15,4 +15,4 @@ deploy:
   api_key: $GITHUB_TOKEN
   file: dist/serv
   on:
-    tags: true
+    branch: master
