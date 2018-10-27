@@ -3,7 +3,7 @@ from glob import glob
 from flask import Flask, render_template, jsonify, request, flash
 from datetime import datetime as dt
 
-from .sensor import Sensor
+from pmserver.sensor import Sensor
 
 app = Flask(__name__)
 app.secret_key = '323rjf42p3rr2j38'
