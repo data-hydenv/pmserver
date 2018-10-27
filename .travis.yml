@@ -12,7 +12,7 @@ install:
 
 script:
   # compile
-  - pyinstaller -F --add-data pmserver/templates:pmserver:templates serv.py
+  - pyinstaller -F --add-data pmserver/templates:pmserver/templates serv.py
 
 deploy:
   provider: releases
