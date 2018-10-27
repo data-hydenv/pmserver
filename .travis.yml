@@ -1,5 +1,7 @@
 language: python
 python: 3.6
+dist:
+  - ubuntu
 
 install:
   - pip install -r requirements.txt
@@ -8,11 +10,12 @@ install:
 
 script:
   - pyinstaller -F --add-data pmserver/templates:pmserver/tempates serv.py
+  - mv dist/serv dist/pmserver_ubuntu
 
 deploy:
   provider: releases
   skip_cleanup: true
   api_key: $GITHUB_TOKEN
-  file: dist/serv
+  file: dist/pmserver_ubuntu
   on:
-    branch: master
+    tags: true
