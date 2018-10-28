@@ -32,10 +32,18 @@ def dashboard():
 @app.route('/config', methods=['GET'])
 def config():
     # get all USB devices. Kind of dirty and Linux specific
-    devices = glob('/dev/ttyUSB*')
+    # devices = glob('/dev/ttyUSB*')
+    devices = pmSensor.devices()
 
     # render
     return render_template('config.html', devices=devices)
+
+
+@app.route('/devices', methods=['GET'])
+def devices():
+    dev = pmSensor.devices()
+
+    return jsonify({'found': len(dev), 'devices': dev}), 200
 
 
 @app.route('/status', methods=['GET'])

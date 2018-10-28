@@ -10,12 +10,12 @@ install:
 
 script:
   - pyinstaller -F --add-data pmserver/templates:pmserver/templates serv.py
-  - mv dist/serv dist/pmserver_ubuntu
+  - mv dist/serv dist/pmserver
 
 deploy:
   provider: releases
   skip_cleanup: true
   api_key: $GITHUB_TOKEN
-  file: dist/pmserver_ubuntu
+  file: dist/pmserver
   on:
-    branch: master
+    tags: true

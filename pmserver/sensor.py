@@ -1,4 +1,4 @@
-import serial, struct
+import serial, struct, platform
 
 
 class Sensor:
@@ -16,6 +16,29 @@ class Sensor:
 
         # try one measurement
         self.measure()
+
+    @staticmethod
+    def devices():
+        # get the correct device path
+        system = platform.system()
+        if system.lower() == 'windows':
+            devpath = 'COM%d'
+        elif system.lower() == 'linux':
+            devpath = '/dev/ttyUSB%d'
+        else:
+            print('System %s not supported yet' % system)
+            devpath = '/dev/ttyUSB%d'
+
+        # try all paths
+        devices = []
+        for i in range(100):
+            try:
+                serial.Serial(devpath % i, 9600)
+                devices.append(devpath % i)
+            except serial.SerialException:
+                continue
+
+        return devices
 
     @property
     def connected(self):
