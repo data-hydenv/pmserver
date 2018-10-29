@@ -16,14 +16,14 @@ matrix:
   fast_finish: true
 
 before_install:
-  - if [[ "$TRVIS_OS_NAME" == "osx" ]]; then brew install python3; fi
-  - if [[ "$TRVIS_OS_NAME" == "osx" ]]; then brew install pyenv-virtualenv; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python3; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pyenv-virtualenv; fi
 
 
 install:
-  - pip install -r requirements.txt
-  - pip install .
-  - pip install pyinstaller
+  - $PIP install -r requirements.txt
+  - $PIP install .
+  - $PIP install pyinstaller
 
 script:
   # pmMonitor
