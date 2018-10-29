@@ -4,6 +4,7 @@ from flask import Flask, render_template, jsonify, request, flash
 from datetime import datetime as dt
 
 from pmserver.sensor import Sensor
+from pmserver import __version__ as version_number
 
 app = Flask(__name__)
 app.secret_key = '323rjf42p3rr2j38'
@@ -25,7 +26,7 @@ def dashboard():
         if not pmSensor.connected:
             flash('Device is corrupted', category='danger')
 
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', version=version_number)
 
 
 @app.route('/', methods=['GET'])
