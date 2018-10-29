@@ -34,9 +34,8 @@ Find the build status of the different versions below:
 
 <table class="table table-striped">
 <tr><th>Environment</th><th>Status</th></tr>
-<tr><th>Linux / OSX</th><img src="https://travis-ci.org/data-hydenv/pmserver.svg?branch=master
-"></tr>
-<tr><th>Windows</th><img src="https://ci.appveyor.com/api/projects/status/5ykoa4yjk1u4x239?svg=true"></tr>
+<tr><th>Linux / OSX</th><td><img src="https://travis-ci.org/data-hydenv/pmserver.svg?branch=master"></td></tr>
+<tr><th>Windows</th><td><img src="https://ci.appveyor.com/api/projects/status/5ykoa4yjk1u4x239?svg=true"></td></tr>
 </table>
 
 latest build: https://github.com/data-hydenv/pmserver/releases
