@@ -2,11 +2,18 @@ language: python
 
 matrix:
   include:
-    - os: ubuntu
+    - os: linux
+      dist: trusty
       python: 3.6
+      env: PIP=pip
     - os: osx
       language: generic
-      env: TOXENV=py36
+      env:
+        - TOXENV=py36
+        - PIP=pip3
+  allow_failures:
+  - os: osx
+  fast_finish: true
 
 before_install:
   - if [[ "$TRVIS_OS_NAME" == "osx" ]]; then brew install python3; fi
