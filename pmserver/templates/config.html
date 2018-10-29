@@ -1,46 +1,90 @@
 {% extends 'index.html' %}
 
 {% block container %}
-    <h1>Sensor Config</h1>
-    <div class="row">
-        <div class="col col-md-6">
+    <div class="jumbotron">
+        <h1>Welcome to PM-Server</h1>
+        <h3>Sensor Config</h3>
+        <p>This local server application can be used to monitor particulate
+            matter using a nova SDS011 PM sensor. The sensor has to be connected
+            to the computer, then its USB port address should show up in the
+            list below. If it is not there, refresh the page please.
+            .</p>
+    </div>
 
+    <div class="row">
+
+        <div class="col col-md-6">
+            <h2>SDS011 PM sensor</h2>
         </div>
 
-        <form class="col col-md-6"
-              action="{{ url_for('dashboard') }}"
-              method="POST">
-            {% if devices|length == 0 %}
-                <div class="alert alert-danger">
-                    <h3 class="alert-heading">No device found</h3>
-                    <p>It seems like there are no USB devices connected. Connect
-                        the
-                        device and refresh this page.
-                    </p>
-                </div>
-            {% else %}
+        <div class="col col-md-6">
+            <h2>Configuration</h2>
+
+            <form class="card p-3"
+                  action="{{ url_for('dashboard') }}"
+                  method="POST">
+                <h4>Configuration</h4>
+                {% if devices|length == 0 %}
+                    <div class="alert alert-danger">
+                        <h3 class="alert-heading">No device found</h3>
+                        <p>It seems like there are no USB devices connected.
+                            Connect
+                            the
+                            device and refresh this page.
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="input-group my-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">USB</span>
+                        </div>
+                        <select name="device" class="form-control">
+                            {% for dev in devices %}
+                                <option value="{{ dev }}">{{ dev }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group my-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Baudrate</span>
+                        </div>
+                        <input type="number" min="4800" step="100" value="9600"
+                               class="form-control" name="baud">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Go to Dashboard
+                    </button>
+                {% endif %}
+            </form>
+
+            <form class="card p-3 mt-5"
+                  action="{{ url_for('dashboard') }}"
+                  method="POST"
+            >
+                <h4>Manual Config</h4>
 
                 <div class="input-group my-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">USB</span>
+                        <span class="input-group-text">Device Address</span>
                     </div>
-                    <select name="device" class="form-control">
-                        {% for dev in devices %}
-                            <option value="{{ dev }}">{{ dev }}</option>
-                        {% endfor %}
-                    </select>
+                    <input type="text" name="device" class="form-control"
+                           placeholder="/dev/ttyUSB0">
                 </div>
+
                 <div class="input-group my-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">Baudrate</span>
                     </div>
                     <input type="number" min="4800" step="100" value="9600"
-                           class="form-control" name="baud">
+                           name="baud" class="form-control">
                 </div>
+
                 <button type="submit" class="btn btn-primary">
                     Go to Dashboard
                 </button>
-            {% endif %}
-        </form>
+            </form>
+
+        </div>
+
     </div>
 {% endblock %}
