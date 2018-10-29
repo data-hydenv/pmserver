@@ -1,7 +1,7 @@
 language: python
 python: 3.6
 dist:
-  - ubuntu
+  - trusty
   - osx
 
 install:
@@ -10,13 +10,20 @@ install:
   - pip install pyinstaller
 
 script:
+  # pmMonitor
   - pyinstaller -F --add-data pmserver/templates:pmserver/templates serv.py
-  - mv dist/serv dist/pmserver
+  - mv dist/serv dist/pmMonitor_${TRAVIS_OS_NAME}_x64
+
+  # pm2csv
+  - pyinstaller -F pm2csv.py
+  - mv dist/pm2csv dist/pm2csv_${TRAVIS_OS_NAME}_x64
 
 deploy:
   provider: releases
   skip_cleanup: true
   api_key: $GITHUB_TOKEN
-  file: dist/pmserver
+  file:
+    - dist/pmMonitor_$(TRAVIS_OS_NAME)_x64
+    - dist/pm2csv_${TRAVIS_OS_NAME}_x64
   on:
     tags: true
