@@ -1,5 +1,9 @@
 # PM Server
 
+  <strong> Driver needed. Windows and Mac users with older OS versions might need a driver to read the sensor over the serial console.     From what I have experienced so far, the drivers for CH34x devices are fine. 
+  There are various available like: https://sparks.gogo.co.nz/ch340.html
+  </strong>
+
 ## Description
 
 
