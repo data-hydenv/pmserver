@@ -1,5 +1,9 @@
 # PM Server
 
+  <strong> Driver needed. Windows and Mac users with older OS versions might need a driver to read the sensor over the serial console.     From what I have experienced so far, the drivers for CH34x devices are fine. 
+  There are various available like: https://sparks.gogo.co.nz/ch340.html
+  </strong>
+
 ## Description
 
 
@@ -8,7 +12,7 @@ matter measurements from a nova SDS011 sensor connected to the computer. The
 application is still experimental and more or less only tested on a ubuntu 18
 .04 OS. However, CIs are compiling the application into various executables
 for Linux, Windows and Mac OSX. These files can be found in the
-`Github Release <https://github.com/data-hydenv/pmserver/releases>`_.
+[Github Release](https://github.com/data-hydenv/pmserver/releases>) section.
 
 There are two in this repository, either available as Python script or as
 executable:
