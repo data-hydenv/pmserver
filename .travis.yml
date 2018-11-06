@@ -24,19 +24,20 @@ install:
 script:
   # pmMonitor
   - pyinstaller -F --add-data pmserver/templates:pmserver/templates serv.py
-  - ls dist/*
   - mv dist/serv dist/pmMonitor_${TRAVIS_OS_NAME}_x64
+  - ls dist/*
 
   # pm2csv
   - pyinstaller -F pm2csv.py
   - mv dist/pm2csv dist/pm2csv_${TRAVIS_OS_NAME}_x64
+  - ls dist/*
 
 deploy:
   provider: releases
   skip_cleanup: true
   api_key: $GITHUB_TOKEN
   file:
-    - dist/pmMonitor_$(TRAVIS_OS_NAME)_x64
-    - dist/pm2csv_${TRAVIS_OS_NAME}_x64
+    - "dist/pmMonitor_$(TRAVIS_OS_NAME)_x64"
+    - "dist/pm2csv_${TRAVIS_OS_NAME}_x64"
   on:
-    tags: true
+    branch: master
