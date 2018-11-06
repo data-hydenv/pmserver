@@ -27,7 +27,7 @@
         </h1>
     </div>
     <div class="row">
-        <div class="badges">
+        <h4 class="badges">
             <div class="badge badge-danger badge-lg m-2" id="statusBadge">
                 Sensor status:&nbsp;
                 <div class="badge badge-light">
@@ -35,11 +35,21 @@
                 </div>
             </div>
 
-            <div class="badge badge-success badge-lg m-2">
+            <div class="badge badge-success m-2">
                 Version:&nbsp;
                 <div class="badge badge-light">{{ version }}</div>
             </div>
-        </div>
+
+            <div class="badge badge-success m-2" id="pm10max">
+                PM10 max (40 µg/m³): &nbsp;
+                <div class="badge badge-light">0 [0%]</div>
+            </div>
+
+            <div class="badge badge-success m-2" id="pm25max">
+                PM2.5 max (25 µg/m³): &nbsp;
+                <div class="badge badge-light">0 [0%]</div>
+            </div>
+        </h4>
     </div>
 
     {% with messages = get_flashed_messages(with_categories=True)  %}
@@ -99,12 +109,14 @@
 {% block scripts %}
     {{ super() }}
     <script>
-        var host = 'http://localhost:5000';
-        var data = [];
-        var pm10 = [];
-        var pm25 = [];
-        var connected = false;
-        var dataFormat = 'json';
+        const host = 'http://localhost:5000';
+        let data = [];
+        let pm10 = [];
+        let pm25 = [];
+        let connected = false;
+        let dataFormat = 'json';
+        let pm10max = 0;
+        let pm25max = 0;
 
         // status handler
         statusHandler = function () {
@@ -126,6 +138,7 @@
                     // update DOM
                     updateRaw();
                     updatePlot(response);
+                    updateMax();
                 });
             }
         };
@@ -171,6 +184,51 @@
                 $('#rawData').html(s);
             }
 
+        };
+
+        // update maximum values
+        updateMax = function () {
+            // not sure if there is a easier way
+            let pm10only = [];
+            let pm25only = [];
+            pm10.forEach(e => pm10only.push(e.y));
+            pm25.forEach(e => pm25only.push(e.y));
+            const maxpm10 = Math.max.apply(Math, pm10only);
+            const maxpm25 = Math.max.apply(Math, pm25only);
+
+            // update the badge
+            b10 = $('#pm10max');
+            b25 = $('#pm25max');
+
+            // update the value
+            b10.children().html(maxpm10 + ' [' + Math.round((maxpm10 / 40.) * 100) + '%]');
+            b25.children().html(maxpm25 + ' [' + Math.round((maxpm25 / 25.) * 100) + '%]');
+
+            // update the color
+            if (maxpm10 >= 40) {
+                b10.removeClass();
+                b10.addClass('badge badge-danger m-2');
+            }
+            if ((maxpm10 < 40) & (maxpm10 >= 30)) {
+                b10.removeClass();
+                b10.addClass('badge badge-warning m-2');
+            }
+            if (maxpm10 < 30) {
+                b10.removeClass();
+                b10.addClass('badge badge-success m-2');
+            }
+            if (maxpm25 >= 25) {
+                b25.removeClass();
+                b25.addClass('badge badge-danger m-2');
+            }
+            if ((maxpm25 < 25) & (maxpm25 >= 18)) {
+                b25.removeClass();
+                b25.addClass('badge badge-warning m-2');
+            }
+            if (maxpm25 < 18) {
+                b25.removeClass();
+                b25.addClass('badge badge-success m-2');
+            }
         };
 
         initPlot = function () {

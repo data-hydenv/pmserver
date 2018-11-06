@@ -39,4 +39,4 @@ deploy:
   file_glob: true
   file: dist/*
   on:
-    branch: master
+    tags: true
