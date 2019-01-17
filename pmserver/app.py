@@ -32,8 +32,6 @@ def dashboard():
 @app.route('/', methods=['GET'])
 @app.route('/config', methods=['GET'])
 def config():
-    # get all USB devices. Kind of dirty and Linux specific
-    # devices = glob('/dev/ttyUSB*')
     devices = pmSensor.devices()
 
     # render

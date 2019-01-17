@@ -39,8 +39,8 @@
                             <span class="input-group-text">USB</span>
                         </div>
                         <select name="device" class="form-control">
-                            {% for dev in devices %}
-                                <option value="{{ dev }}">{{ dev }}</option>
+                            {% for adr, name in devices.items() %}
+                                <option value="{{ adr }}">{{ name }}</option>
                             {% endfor %}
                         </select>
                     </div>

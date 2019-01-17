@@ -1,4 +1,5 @@
 import serial, struct, platform
+from serial.tools import list_ports
 
 
 class Sensor:
@@ -18,7 +19,7 @@ class Sensor:
         self.measure()
 
     @staticmethod
-    def devices():
+    def old_devices():
         # get the correct device path
         system = platform.system()
         if system.lower() == 'windows':
@@ -39,6 +40,31 @@ class Sensor:
                 continue
 
         return devices
+
+    @staticmethod
+    def devices():
+        # get the info objects
+        info = list_ports.comports()
+
+        # parse the info
+        devices, names = list(), list()
+        for dev in info:
+            # port address
+            devices.append(dev.device)
+
+            # device name
+            if dev.name is not None:
+                names.append(dev.name)
+            elif dev.product is not None and dev.maufacturer is not None:
+                names.append('%s - %s' % (dev.manufacturer, dev.product))
+            elif dev.description is not None:
+                names.append(dev.description)
+            elif dev.hwid is not None:
+                names.append(dev.hwid)
+            else:
+                names.append(dev.device)
+        print({d: i for d, i in zip(devices, names)})
+        return {d: i for d, i in zip(devices, names)}
 
     @property
     def connected(self):
